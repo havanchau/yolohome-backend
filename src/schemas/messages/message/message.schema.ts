@@ -11,12 +11,6 @@ export class Message {
 
   @IsString()
   @MinLength(4)
-  @ApiProperty({ type: String, description: 'id' })
-  @Prop()
-  id: string;
-
-  @IsString()
-  @MinLength(4)
   @ApiProperty({ type: String, description: 'userIdSent' })
   @Prop({ required: true, unique: true })
   userIdSent: string;
