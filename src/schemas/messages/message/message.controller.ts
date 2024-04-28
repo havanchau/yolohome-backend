@@ -1,16 +1,22 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { Message } from './message.schema';
 import { MessageService } from './message.service';
-import { Socket } from 'socket.io';
+import { MessageGateway } from './message.gateway'; // Import MessageGateway
 
 @Controller('messages')
 export class MessageController {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly messageGateway: MessageGateway, // Inject MessageGateway
+  ) { }
 
   @Post()
   async create(@Body() message: Message): Promise<Message> {
     const createdMessage = await this.messageService.createMessage(message);
-    // You can emit the created message to the relevant users here using Socket.IO
+
+    // Gửi tin nhắn mới tới các client thông qua Gateway
+    this.messageGateway.sendMessageToClient(createdMessage);
+
     return createdMessage;
   }
 
@@ -19,8 +25,8 @@ export class MessageController {
     return this.messageService.getAllMessages();
   }
 
-  @Get(':userId')
-  async getByUserId(@Param('userId') userId: string): Promise<Message[]> {
-    return this.messageService.getMessagesByUserId(userId);
+  @Get(':userIdSent/:userIdReceived')
+  async getByUserIds(@Param('userIdSent') userIdSent: string, @Param('userIdReceived') userIdReceived: string): Promise<Message[]> {
+    return this.messageService.getMessagesBetweenUsers(userIdSent, userIdReceived);
   }
 }

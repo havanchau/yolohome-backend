@@ -1,5 +1,6 @@
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { Message } from './message.schema';
 
 @WebSocketGateway()
 export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -13,4 +14,8 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     console.log(`Client disconnected: ${socket.id}`);
   }
 
+  // Thêm phương thức để gửi tin nhắn tới client
+  sendMessageToClient(message: Message) {
+    this.server.emit('newMessage', message);
+  }
 }

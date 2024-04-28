@@ -2,9 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { IsString, MinLength } from 'class-validator';
-import { HydratedDocument } from 'mongoose';
-
-export type MessageDocument = HydratedDocument<Message>;
+import { Document } from 'mongoose';
 
 @Schema()
 export class Message {
@@ -12,34 +10,33 @@ export class Message {
   @IsString()
   @MinLength(4)
   @ApiProperty({ type: String, description: 'userIdSent' })
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   userIdSent: string;
 
   @IsString()
   @MinLength(4)
   @ApiProperty({ type: String, description: 'userIdReceived' })
-  @Prop()
+  @Prop({ required: true })
   userIdReceived: string;
 
   @ApiProperty({ type: Date, description: 'timeSent' })
-  @Prop()
+  @Prop({ default: Date.now })
   timeSent: Date;
 
   @IsString()
-  @MinLength(4)
+  @MinLength(1)
   @ApiProperty({ type: String, description: 'content' })
-  @Exclude()
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   content: string;
 
   @ApiProperty({ type: Date, description: 'createdAt' })
-  @Prop()
+  @Prop({ default: Date.now })
   createdAt: Date;
 
   @ApiProperty({ type: Date, description: 'completedAt' })
   @Prop()
   completedAt?: Date;
-
 }
 
+export type MessageDocument = Message & Document;
 export const MessageSchema = SchemaFactory.createForClass(Message);

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Message, MessageDocument } from './message.schema';
-import { Socket } from 'socket.io';
 
 @Injectable()
 export class MessageService {
@@ -19,9 +18,12 @@ export class MessageService {
     return this.messageModel.find().exec();
   }
 
-  async getMessagesByUserId(userId: string): Promise<Message[]> {
+  async getMessagesBetweenUsers(userId1: string, userId2: string): Promise<Message[]> {
     return this.messageModel.find({
-      $or: [{ userIdSent: userId }, { userIdReceived: userId }],
+      $or: [
+        { userIdSent: userId1, userIdReceived: userId2 },
+        { userIdSent: userId2, userIdReceived: userId1 },
+      ],
     }).exec();
   }
 }

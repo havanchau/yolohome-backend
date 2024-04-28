@@ -13,7 +13,7 @@ export class Device {
     @IsString()
     @MinLength(4)
     @ApiProperty({ type: String, description: 'name' })
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true })
     name: string;
 
     @IsString()
@@ -26,21 +26,21 @@ export class Device {
     @MinLength(4)
     @ApiProperty({ type: String, description: 'image' })
     @Exclude()
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true })
     image: string;
 
     @IsString()
     @MinLength(4)
     @ApiProperty({ type: String, description: 'describe' })
     @Exclude()
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true })
     describe: string;
 
     @IsString()
     @MinLength(4)
     @ApiProperty({ type: String, description: 'type' })
     @Exclude()
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true })
     type: string;
 
 }
