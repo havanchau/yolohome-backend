@@ -7,7 +7,7 @@ import { MessageGateway } from './message.gateway'; // Import MessageGateway
 export class MessageController {
   constructor(
     private readonly messageService: MessageService,
-    private readonly messageGateway: MessageGateway, // Inject MessageGateway
+    private readonly messageGateway: MessageGateway,
   ) { }
 
   @Post()
@@ -18,11 +18,6 @@ export class MessageController {
     this.messageGateway.sendMessageToClient(createdMessage);
 
     return createdMessage;
-  }
-
-  @Get()
-  async getAll(): Promise<Message[]> {
-    return this.messageService.getAllMessages();
   }
 
   @Get(':userIdSent/:userIdReceived')
