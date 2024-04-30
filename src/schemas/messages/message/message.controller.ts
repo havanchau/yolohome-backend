@@ -14,7 +14,6 @@ export class MessageController {
   async create(@Body() message: Message): Promise<Message> {
     const createdMessage = await this.messageService.createMessage(message);
 
-    // Gửi tin nhắn mới tới các client thông qua Gateway
     this.messageGateway.sendMessageToClient(createdMessage);
 
     return createdMessage;

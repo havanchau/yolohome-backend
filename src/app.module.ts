@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './schemas/users/users.module';
 import { MessagesModule } from './schemas/messages/message/message.module';
 import { DeviceSalersModule } from './schemas/devices/salerdevices/saler.device.module';
+import { ImagesModule } from './schemas/images/images.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DeviceSalersModule } from './schemas/devices/salerdevices/saler.device.
     UsersModule,
     MessagesModule,
     DeviceSalersModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
