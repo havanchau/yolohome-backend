@@ -8,7 +8,7 @@ export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('image')) // image là tên của field trong form data
+  @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile() file: Multer.File) {
     console.log(file);
     return this.imagesService.uploadImage(file);

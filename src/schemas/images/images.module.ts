@@ -6,7 +6,7 @@ import { ImagesService } from './images.service';
 @Module({
   imports: [
     MulterModule.register({
-      dest: './uploads', // thư mục để lưu trữ file tải lên
+      dest: './uploads',
     }),
   ],
   controllers: [ImagesController],
