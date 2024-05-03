@@ -15,6 +15,7 @@ import {
     Body,
     Param,
     NotFoundException,
+    Query,
 } from '@nestjs/common';
 import { UpdateDeviceSalerDto } from './dto/update-saler.device.dto';
 import { CreateDeviceSalerDto } from './dto/create-saler.device.dto';
@@ -30,7 +31,10 @@ export class DeviceSalerController {
         type: DeviceSaler,
         isArray: true,
     })
-    async findAll() {
+    async findAll(@Query() params: any) {
+        if (params.name) {
+            return this.deviceSalersService.findByName(params.name)
+        }
         return this.deviceSalersService.findAll();
     }
 

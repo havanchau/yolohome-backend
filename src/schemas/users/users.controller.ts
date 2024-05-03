@@ -61,7 +61,7 @@ export class UsersController {
     async findOne(@Param('id') id: string) {
         const user = await this.usersService.findById(id);
         if (!user) {
-            throw new NotFoundException('Income not found');
+            throw new NotFoundException('Not found');
         }
         return user;
     }

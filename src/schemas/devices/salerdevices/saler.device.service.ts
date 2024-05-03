@@ -33,15 +33,30 @@ export class DeviceSalersService {
     }
 
     async update(id: string, dpdateDeviceSalerDto: UpdateDeviceSalerDto): Promise<DeviceSaler> {
-         //
+        //
         return null;
     }
 
-  async delete (id: string): Promise < DeviceSaler > {
-    const deletedDeviceSaler = await this.deviceSalerModel.findByIdAndDelete(id).exec();
-    if(!deletedDeviceSaler) {
-        throw new NotFoundException('Not found');
+    async delete(id: string): Promise<DeviceSaler> {
+        const deletedDeviceSaler = await this.deviceSalerModel.findByIdAndDelete(id).exec();
+        if (!deletedDeviceSaler) {
+            throw new NotFoundException('Not found');
+        }
+        return deletedDeviceSaler;
     }
-    return deletedDeviceSaler;
-}
+
+    async findByName(name: string): Promise<DeviceSaler[]> {
+        if (!name) {
+            return [];
+        }
+
+        const regex = new RegExp(name, 'i');
+
+        return this.deviceSalerModel.find({
+            $or: [
+                { name: { $regex: regex } }
+            ]
+        }).exec();
+
+    }
 }

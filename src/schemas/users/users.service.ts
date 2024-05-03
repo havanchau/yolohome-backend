@@ -28,11 +28,11 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<User> {
-    // const user = await this.userModel.findById(id, { password: 0 }).exec();
-    // if (!user) {
-    throw new NotFoundException('User not found');
-    // }
-    // return user;
+    const user = await this.userModel.findById(id, { password: 0 }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
