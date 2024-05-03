@@ -15,9 +15,11 @@ import {
     Body,
     Param,
     NotFoundException,
+    Query,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginDto } from "./dto/login.dto"
 import { User } from './users.schema';
 
 @Controller('users')
@@ -30,7 +32,10 @@ export class UsersController {
         type: User,
         isArray: true,
     })
-    async findAll() {
+    async findAll(@Query() params: any) {
+        if (params.fullname) {
+            return this.usersService.findByName(params.fullname);
+        }
         return this.usersService.findAll();
     }
 
@@ -84,4 +89,27 @@ export class UsersController {
     async delete(@Param('id') id: string) {
         return this.usersService.delete(id);
     }
+    @Post('login')
+    @ApiOkResponse({
+        type: User,
+        isArray: false,
+    })
+    @ApiNotFoundResponse({
+        description: 'Not Found',
+    })
+    @ApiBadRequestResponse({ description: 'Bad Request' })
+    async authenticate(@Body() loginDto: LoginDto) {
+        const { email, password } = loginDto;
+
+        if (!email || !password) {
+            throw new NotFoundException("No data");
+        }
+
+        try {
+            return await this.usersService.authenticate(email, password);
+        } catch (error) {
+            throw new NotFoundException('User not found or Incorrect Password');
+        }
+    }
+
 }

@@ -28,11 +28,11 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.userModel.findById(id, { password: 0 }).exec();
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return user;
+    // const user = await this.userModel.findById(id, { password: 0 }).exec();
+    // if (!user) {
+    throw new NotFoundException('User not found');
+    // }
+    // return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
@@ -66,4 +66,34 @@ export class UsersService {
     }
     return deletedUser;
   }
+  async authenticate(email: string, password: string): Promise<User> {
+    const user = await this.userModel.findOne({ email }).exec();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Incorrect Password');
+    }
+    return user;
+  }
+
+  async findByName(fullname: string): Promise<User[]> {
+    if (!fullname) {
+      return [];
+    }
+
+    const regex = new RegExp(fullname, 'i');
+
+    return this.userModel.find({
+      $or: [
+        { fullname: { $regex: regex } }
+      ]
+    }).exec();
+
+  }
+
+
 }
