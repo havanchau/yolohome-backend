@@ -66,4 +66,18 @@ export class UsersService {
     }
     return deletedUser;
   }
+  async authenticate(email: string, password: string): Promise<User> {
+    const user = await this.userModel.findOne({ email }).exec();
+  
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+  
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Incorrect Password');
+    }
+      return user;
+  }
+  
 }
