@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { IsString, MinLength } from 'class-validator';
+import { IsString, MinLength, IsNumber } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 
 export type DeviceDocument = HydratedDocument<Device>;
@@ -9,18 +9,11 @@ export type DeviceDocument = HydratedDocument<Device>;
 @Schema()
 export class Device {
 
-
     @IsString()
     @MinLength(4)
     @ApiProperty({ type: String, description: 'name' })
     @Prop({ required: true })
     name: string;
-
-    @IsString()
-    @MinLength(4)
-    @ApiProperty({ type: String, description: 'content' })
-    @Prop()
-    content: string;
 
     @IsString()
     @MinLength(4)
@@ -42,6 +35,12 @@ export class Device {
     @Exclude()
     @Prop({ required: true })
     type: string;
+
+    @IsNumber()
+    @ApiProperty({ type: Number, description: 'power' })
+    @Exclude()
+    @Prop({ required: true })
+    power: number;
 
 }
 
