@@ -13,16 +13,18 @@ export class DeviceSalersService {
     ) { }
 
     async findAll(): Promise<DeviceSaler[]> {
-        return this.deviceSalerModel.find({}).exec();
+        return this.deviceSalerModel.find({}).exec() || [];
     }
 
     async create(createDeviceSalerDto: CreateDeviceSalerDto): Promise<DeviceSaler> {
-        const createdDeviceSaler = new this.deviceSalerModel({
-            ...createDeviceSalerDto,
-            createdAt: new Date(),
-        });
-        return await createdDeviceSaler.save();
+        try {
+            const createdDeviceSaler = new this.deviceSalerModel(createDeviceSalerDto);
+            return await createdDeviceSaler.save();
+        } catch (error) {
+            throw new Error('Could not create device saler' + error);
+        }
     }
+
 
     async findById(id: string): Promise<DeviceSaler> {
         const deviceSaler = await this.deviceSalerModel.findById(id).exec();
@@ -33,15 +35,40 @@ export class DeviceSalersService {
     }
 
     async update(id: string, dpdateDeviceSalerDto: UpdateDeviceSalerDto): Promise<DeviceSaler> {
-         //
+        //
         return null;
     }
 
-  async delete (id: string): Promise < DeviceSaler > {
-    const deletedDeviceSaler = await this.deviceSalerModel.findByIdAndDelete(id).exec();
-    if(!deletedDeviceSaler) {
-        throw new NotFoundException('Not found');
+    async delete(id: string): Promise<DeviceSaler> {
+        const deletedDeviceSaler = await this.deviceSalerModel.findByIdAndDelete(id).exec();
+        if (!deletedDeviceSaler) {
+            throw new NotFoundException('Not found');
+        }
+        return deletedDeviceSaler;
     }
-    return deletedDeviceSaler;
-}
+
+    async findByName(name: string, userId: string): Promise<DeviceSaler[]> {
+        if (!name) {
+            return [];
+        }
+    
+        const regex = new RegExp(name, 'i');
+    
+        return this.deviceSalerModel.find({
+            userId: userId,
+            $or: [
+                { name: { $regex: regex } }
+            ]
+        }).exec();
+    }
+    
+
+    async getDeviceByUserId(userId: string): Promise<DeviceSaler[]> {
+        try {
+            const devices = await this.deviceSalerModel.find({ userId }).exec();
+            return devices;
+        } catch (error) {
+            throw new Error('Could not fetch devices by user id');
+        }
+    }
 }

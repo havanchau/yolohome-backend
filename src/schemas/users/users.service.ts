@@ -68,16 +68,32 @@ export class UsersService {
   }
   async authenticate(email: string, password: string): Promise<User> {
     const user = await this.userModel.findOne({ email }).exec();
-  
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new Error('Incorrect Password');
     }
-      return user;
+    return user;
   }
-  
+
+  async findByName(fullname: string): Promise<User[]> {
+    if (!fullname) {
+      return [];
+    }
+
+    const regex = new RegExp(fullname, 'i');
+
+    return this.userModel.find({
+      $or: [
+        { fullname: { $regex: regex } }
+      ]
+    }).exec();
+
+  }
+
+
 }

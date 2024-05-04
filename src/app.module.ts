@@ -8,6 +8,8 @@ import { UsersModule } from './schemas/users/users.module';
 import { MessagesModule } from './schemas/messages/message/message.module';
 import { DeviceSalersModule } from './schemas/devices/salerdevices/saler.device.module';
 import { NotificationModule } from './schemas/notifications/notification.module';
+import { ImagesModule } from './schemas/images/images.module';
+
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { NotificationModule } from './schemas/notifications/notification.module'
     UsersModule,
     MessagesModule,
     DeviceSalersModule,
-    NotificationModule
+    NotificationModule,
+    ImagesModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
