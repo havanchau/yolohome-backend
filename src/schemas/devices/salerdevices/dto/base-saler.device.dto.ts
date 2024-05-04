@@ -21,7 +21,7 @@ export class BaseDeviceSalerDto {
   amount: number;
 
   @ApiProperty({
-    type: Object,
+    type: Device,
     description: 'information',
   })
   information: Device;

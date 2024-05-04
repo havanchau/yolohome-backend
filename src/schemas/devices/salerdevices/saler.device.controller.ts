@@ -15,6 +15,7 @@ import {
     Body,
     Param,
     NotFoundException,
+    BadRequestException,
     Query,
 } from '@nestjs/common';
 import { UpdateDeviceSalerDto } from './dto/update-saler.device.dto';
@@ -23,7 +24,7 @@ import { DeviceSaler } from './saler.device.schema';
 
 @Controller('devicesalers')
 @ApiTags('devicesalers')
-export class DeviceSalerController {
+export class DeviceSalersController {
     constructor(private readonly deviceSalersService: DeviceSalersService) { }
 
     @Get()
@@ -33,21 +34,27 @@ export class DeviceSalerController {
     })
     async findAll(@Query() params: any) {
         if (params.name) {
-            return this.deviceSalersService.findByName(params.name)
+            return this.deviceSalersService.findByName(params.name, params.userId)
         }
         return this.deviceSalersService.findAll();
     }
 
     @Post()
     @ApiCreatedResponse({
-        description: 'Created Succesfully',
+        description: 'Created Successfully',
         type: DeviceSaler,
         isArray: false,
     })
     @ApiBadRequestResponse({ description: 'Bad Request' })
     async create(@Body() createDeviceSalerDto: CreateDeviceSalerDto) {
-        return this.deviceSalersService.create(createDeviceSalerDto);
+        try {
+            const createdDeviceSaler = await this.deviceSalersService.create(createDeviceSalerDto);
+            return createdDeviceSaler;
+        } catch (error) {
+            throw new BadRequestException(error.message);
+        }
     }
+
 
     @Get(':id')
     @ApiOkResponse({
@@ -87,5 +94,29 @@ export class DeviceSalerController {
     })
     async delete(@Param('id') id: string) {
         return this.deviceSalersService.delete(id);
+    }
+
+    @Get('user/:userId/devices')
+    @ApiOkResponse({
+        type: DeviceSaler,
+        isArray: true,
+        description: 'List of devices for a user',
+    })
+    @ApiNotFoundResponse({
+        description: 'No devices found for the user',
+    })
+    @ApiBadRequestResponse({
+        description: 'Bad Request',
+    })
+    async getDevicesByUserId(@Param('userId') userId: string) {
+        try {
+            const devices = await this.deviceSalersService.getDeviceByUserId(userId);
+            if (devices.length === 0) {
+                throw new NotFoundException('No devices found for the user');
+            }
+            return devices;
+        } catch (error) {
+            throw new BadRequestException(error.message);
+        }
     }
 }
