@@ -41,6 +41,22 @@ export class User {
   @Exclude()
   @Prop({ required: true, unique: true })
   password: string;
+
+  @IsString()
+  @ApiProperty({ type: String, description: 'role' })
+  @Prop({ required: true })
+  role: string;
+
+  @IsString()
+  @ApiProperty({ type: String, description: 'homeId' })
+  @Prop({ required: true })
+  homeId: string;
+
+  @IsString()
+  @ApiProperty({ type: String, description: 'homePassword' })
+  @Prop({ required: true })
+  homePassword: string;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
