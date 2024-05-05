@@ -34,9 +34,18 @@ export class DeviceSalersService {
         return deviceSaler;
     }
 
-    async update(id: string, dpdateDeviceSalerDto: UpdateDeviceSalerDto): Promise<DeviceSaler> {
-        //
-        return null;
+    async update(id: string, updateDeviceSalerDto: UpdateDeviceSalerDto): Promise<DeviceSaler> {
+        try {
+            const updatedDeviceSaler = await this.deviceSalerModel.findByIdAndUpdate(id, updateDeviceSalerDto, { new: true }).exec();
+            
+            if (!updatedDeviceSaler) {
+                throw new NotFoundException('Device saler not found');
+            }
+    
+            return updatedDeviceSaler;
+        } catch (error) {
+            throw new Error('Could not update device saler');
+        }
     }
 
     async delete(id: string): Promise<DeviceSaler> {

@@ -10,7 +10,6 @@ export class ImagesController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile() file: Multer.File) {
-    console.log(file);
     return this.imagesService.uploadImage(file);
   }
 
